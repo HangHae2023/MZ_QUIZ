@@ -2,14 +2,14 @@ const express = require('express');
 const router = express.Router();
 const authMiddleware = require('../middlewares/authMiddleware');
 
-const QuizController = require('../controllers/quiz.controller');
+const QuizController = require('../controller/quiz.controller');
 const quizController = new QuizController();
 
-router.get('/quiz', quizController.getAllQuiz);
-router.get('/quiz/:quizId', quizController.getQuiz);
-router.post('/quiz', authMiddleware, quizController.createQuiz);
-router.post('/quiz/:quizId', authMiddleware, quizController.checkAnswer);
-router.put('/quiz/:quizId', authMiddleware, quizController.updateQuiz);
-router.delete('/quiz/:quizId', authMiddleware, quizController.deleteQuiz);
+router.get('/', quizController.getAllQuiz);
+router.post('/', authMiddleware, quizController.createQuiz);
+router.get('/:quizId', quizController.getQuiz);
+router.post('/:quizId', authMiddleware, quizController.checkAnswer);
+router.put('/:quizId', authMiddleware, quizController.updateQuiz);
+router.delete('/:quizId', authMiddleware, quizController.deleteQuiz);
 
 module.exports = router;

@@ -2,7 +2,6 @@ const LoginRepository = require('../repositories/login.repository');
 const { ValidationError } = require('../exceptions/index.exception');
 const jwt = require('jsonwebtoken');
 
-
 class LoginService {
   constructor() {
     this.loginRepository = new LoginRepository();
@@ -15,7 +14,5 @@ class LoginService {
     }
   };
 }
-
-
 
 module.exports = LoginService;

@@ -1,18 +1,7 @@
-
-
-
-
-
-
-
-
-
-
-
 const { Users } = require('../models');
 const { Op } = require('sequelize');
 
-class LogoutRepository extends Users{
+class LogoutRepository extends Users {
   constructor() {
     super();
   }
@@ -27,5 +16,4 @@ class LogoutRepository extends Users{
       throw new Error(err.message);
     }
   };
-
 }

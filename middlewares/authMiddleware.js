@@ -1,42 +1,38 @@
+require('dotenv').config();
+
 const jwt = require('jsonwebtoken');
 const { Users } = require('../models');
 
-// 유저 인증에 실패하면 403 상태 코드를 반환한다.
 module.exports = async (req, res, next) => {
+  const { authorization } = req.cookies;
+
+  const [authType, authToken] = (authorization ?? '').split(' ');
+
+  if (authType !== 'Bearer' || !authToken) {
+    return res.status(403).json({
+      errorMessage: '로그인 후에 이용할 수 있는 기능입니다.',
+    });
+  }
+
   try {
-    const cookies = req.cookies['middleProjectCookie'];
-    // const { middleProjectCookie } = req.cookies;
-    if (!cookies) {
-      return res.status(403).send({
-        success: false,
-        errorCode : 10,
-        errorMessage: '로그인이 필요한 기능입니다.',
-      });
-    }
+    console.log('authorization ==>', authorization);
+    console.log('authType ==>', authType);
+    console.log('authToken ==>', authToken);
+    const { userId } = jwt.verify(authToken, process.env.SECRET_KEY);
 
-    const [tokenType, tokenValue] = cookies.split(' ');
-    if (tokenType !== 'Bearer') {
-      res.clearCookie('middleProjectCookie'); // 인증에 실패하였을 경우 Cookie를 삭제합니다.
-      return res.status(403).send({
-        success: false,
-        errorMessage: '다시 로그인이 필요합니다.',
-      });
-    }
-
-    // const { userId } = jwt.verify(tokenValue, 'Secret-Or-Public-Key');
-    const decodedToken = jwt.verify(tokenValue, "Secret Key");
-    const userId = decodedToken.userId;
-
-    const user = await Users.findByPk(userId);
+    const user = await Users.findOne({
+      where: { userId },
+    });
 
     res.locals.user = user;
+
     next();
-  } catch (error) {
-    res.clearCookie('middleProjectCookie'); // 인증에 실패하였을 경우 Cookie를 삭제합니다.
-    console.error(error);
-    return res.status(404).send({
-      success: false,
-      errorMessage: '로그인이 필요한 기능입니다.',
+  } catch (err) {
+    // 사용자 인증에 실패한 이유
+    console.error(err);
+
+    return res.status(403).json({
+      errorMessage: '전달된 쿠키에서 오류가 발생하였습니다.',
     });
   }
 };

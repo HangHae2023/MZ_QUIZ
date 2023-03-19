@@ -1,6 +1,6 @@
 require('dotenv').config();
 const multer = require('multer');
-const fs = require("fs");
+const fs = require('fs');
 const path = require('path');
 const express = require('express');
 const morgan = require('morgan');
@@ -23,7 +23,6 @@ app.use((err, req, res, next) => {
   console.error(err);
   return res.status(err.status || 500).json({
     success: err.expect || false,
-    errorCode: err.code || null,
     errorMessage: err.message || '서버 에러가 발생했습니다.',
   });
 });

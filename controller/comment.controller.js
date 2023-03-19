@@ -14,21 +14,17 @@ class AuthController {
       const { content } = req.body;
       const user = res.locals.user;
 
-      console.log(content);
-
       // 검증할 스키마를 정의한다
       const schema = Joi.object({
         content: Joi.string().required(),
       });
 
       // 스키마를 이용해 데이터를 검증한다
-      const { error } = schema.validate({content});
-
-      console.log(error);
+      const { error } = schema.validate({ content });
 
       // 검증 결과를 확인한다
-      if (error || content == "") {
-        throw new CustomError('댓글 내용을 입력해주세요', 412, 29, false);
+      if (error || content == '') {
+        throw new CustomError('댓글 내용을 입력해주세요', 412, false);
       }
 
       const writeComment = await this.commentService.writeComment(
@@ -38,7 +34,7 @@ class AuthController {
       );
 
       if (writeComment == null) {
-        throw new CustomError('댓글 작성에 실패했습니다.', 400, 30, false);
+        throw new CustomError('댓글 작성에 실패했습니다.', 400, false);
       } else {
         return res.status(200).json({
           success: true,
@@ -47,7 +43,7 @@ class AuthController {
       }
     } catch (err) {
       next(err);
-    } 
+    }
   };
 
   /**
@@ -61,7 +57,7 @@ class AuthController {
 
       return res.status(200).json({
         success: true,
-        comments: writeComment
+        comments: writeComment,
       });
     } catch (err) {
       next(err);
@@ -83,17 +79,21 @@ class AuthController {
       });
 
       // 스키마를 이용해 데이터를 검증한다
-      const { error } = schema.validate({content});
+      const { error } = schema.validate({ content });
 
       // 검증 결과를 확인한다
-      if (error || content == "") {
-        throw new CustomError('댓글 내용을 입력해주세요', 412, 34, false);
+      if (error || content == '') {
+        throw new CustomError('댓글 내용을 입력해주세요', 412, false);
       }
 
-      const updateComment = await this.commentService.updateComment(commentId, content, user.userId)
+      const updateComment = await this.commentService.updateComment(
+        commentId,
+        content,
+        user.userId
+      );
 
       if (updateComment === 0) {
-        throw new CustomError('댓글 수정에 실패했습니다.', 400, 35, false);
+        throw new CustomError('댓글 수정에 실패했습니다.', 400, false);
       } else {
         return res.status(200).json({
           success: true,
@@ -102,7 +102,7 @@ class AuthController {
       }
     } catch (err) {
       next(err);
-    } 
+    }
   };
 
   /**
@@ -113,10 +113,13 @@ class AuthController {
       const { commentId } = req.params;
       const user = res.locals.user;
 
-      const deleteComment = await this.commentService.deleteComment(commentId, user.userId)
+      const deleteComment = await this.commentService.deleteComment(
+        commentId,
+        user.userId
+      );
 
       if (deleteComment === 0) {
-        throw new CustomError('댓글 삭제에 실패했습니다.', 400, 39, false);
+        throw new CustomError('댓글 삭제에 실패했습니다.', 400, false);
       } else {
         return res.status(200).json({
           success: true,
@@ -125,9 +128,8 @@ class AuthController {
       }
     } catch (err) {
       next(err);
-    } 
+    }
   };
-
 }
 
 module.exports = AuthController;

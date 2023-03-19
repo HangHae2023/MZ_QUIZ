@@ -8,19 +8,27 @@ class AuthService {
 
   /**
    * 댓글 생성
-   * @param {Integer} quizId 
-   * @param {String} userId 
-   * @param {String} content 
+   * @param {Integer} quizId
+   * @param {String} userId
+   * @param {String} content
    * @return 생성된 댓글
    */
   writeComment = async (quizId, userId, content) => {
     const searchQuiz = await this.commentRepository.findQuiz(quizId);
 
     if (!searchQuiz) {
-      throw new CustomError('해당 퀴즈 게시글은 존재하지 않습니다.', 404, 26, false);
+      throw new CustomError(
+        '해당 퀴즈 게시글은 존재하지 않습니다.',
+        404,
+        false
+      );
     }
 
-    const createUser = await this.commentRepository.writeComment(quizId, userId, content);
+    const createUser = await this.commentRepository.writeComment(
+      quizId,
+      userId,
+      content
+    );
 
     return createUser;
   };
@@ -34,7 +42,11 @@ class AuthService {
     const searchQuiz = await this.commentRepository.findQuiz(quizId);
 
     if (!searchQuiz) {
-      throw new CustomError('해당 퀴즈 게시글은 존재하지 않습니다.', 404, 40, false);
+      throw new CustomError(
+        '해당 퀴즈 게시글은 존재하지 않습니다.',
+        404,
+        false
+      );
     }
 
     const selectComments = await this.commentRepository.selectComments(quizId);
@@ -45,19 +57,25 @@ class AuthService {
   /**
    * 댓글 수정
    * @param {Integer} commentId
-   * @param {String} content 
-   * @param {String} userId 
+   * @param {String} content
+   * @param {String} userId
    * @return 수정된 행의 수
    */
   updateComment = async (commentId, content, userId) => {
-
-    const serachQuizComment = await this.commentRepository.findQuizComment(commentId, userId)
+    const serachQuizComment = await this.commentRepository.findQuizComment(
+      commentId,
+      userId
+    );
 
     if (!serachQuizComment) {
-      throw new CustomError('댓글의 수정 권한이 없습니다.', 403, 34, false);
+      throw new CustomError('댓글의 수정 권한이 없습니다.', 403, false);
     }
 
-    const updateComment = await this.commentRepository.updateComment(commentId, userId, content)
+    const updateComment = await this.commentRepository.updateComment(
+      commentId,
+      userId,
+      content
+    );
 
     return updateComment;
   };
@@ -65,17 +83,20 @@ class AuthService {
   /**
    * 댓글 삭제
    * @param {Integer} commentId
-   * @param {String} userId 
+   * @param {String} userId
    * @return 삭제된 행의 수
    */
   deleteComment = async (commentId, userId) => {
-    const serachQuizComment = await this.commentRepository.findQuizComment(commentId, userId)
+    const serachQuizComment = await this.commentRepository.findQuizComment(
+      commentId,
+      userId
+    );
 
     if (!serachQuizComment) {
-      throw new CustomError('댓글의 삭제 권한이 없습니다.', 403, 36, false);
+      throw new CustomError('댓글의 삭제 권한이 없습니다.', 403, false);
     }
 
-    const deleteComment = await this.commentRepository.deleteComment(commentId)
+    const deleteComment = await this.commentRepository.deleteComment(commentId);
 
     return deleteComment;
   };
