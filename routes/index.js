@@ -1,5 +1,8 @@
 const express = require('express');
 const router = express.Router();
+const commentRouter = require('./comment.routes');
+
+router.use('/comment', [commentRouter]);
 
 const signupRouter = require('./signup.route');
 const loginRouter = require('./login.route');

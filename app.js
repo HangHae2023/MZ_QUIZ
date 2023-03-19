@@ -20,9 +20,10 @@ app.use('/', routes);
 
 // 에러 핸들러
 app.use((err, req, res, next) => {
-  console.log(err);
+  console.error(err);
   return res.status(err.status || 500).json({
-    success: err.expect,
+    success: err.expect || false,
+    errorCode: err.code || null,
     errorMessage: err.message || '서버 에러가 발생했습니다.',
   });
 });
