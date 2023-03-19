@@ -20,13 +20,9 @@ class ValidationError extends Error {
     this.name = 'ValidationError';
     this.message = message || '요청한 데이터 형식이 올바르지 않습니다'
     if (message) this.message = {
-
       success : false,
       errorcode : this.status,
       errorMessage : this.message
-
-
-
     }
   }
 }
