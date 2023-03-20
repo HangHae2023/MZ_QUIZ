@@ -29,9 +29,10 @@ class LoginController {
       let expires = new Date();
       expires.setMinutes(expires.getMinutes() + 60);
 
-      res.cookie('authorization', `Bearer ${token}`, {
-        expires: expires,
-      });
+      // res.cookie('authorization', `Bearer ${token}`, {
+      //   expires: expires,
+      // });
+      res.set('Authorization', `Bearer ${token}`);
 
       return res.status(200).json({
         success: true,
