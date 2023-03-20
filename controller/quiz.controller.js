@@ -89,6 +89,8 @@ class QuizController {
       const { userId } = res.locals.user;
       const { quizId } = req.params;
 
+      console.log('퀴즈 수정 진입', title, answer, explain, userId, quizId)
+
       await this.quizService.updateQuiz(userId, quizId, title, answer, explain);
       return res.status(200).json({
         success: true,
