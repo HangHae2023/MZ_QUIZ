@@ -4,8 +4,10 @@ const jwt = require('jsonwebtoken');
 const { Users } = require('../models');
 
 module.exports = async (req, res, next) => {
-  const authorization = req.headers.authorization;
+  const authorization = req.headers.Authorization;
   // const { authorization } = req.cookies;
+
+  // console.log(authorization);
 
   const [authType, authToken] = (authorization ?? '').split(' ');
 
@@ -16,9 +18,6 @@ module.exports = async (req, res, next) => {
   }
 
   try {
-    console.log('authorization ==>', authorization);
-    console.log('authType ==>', authType);
-    console.log('authToken ==>', authToken);
     const { userId } = jwt.verify(authToken, process.env.SECRET_KEY);
 
     const user = await Users.findOne({

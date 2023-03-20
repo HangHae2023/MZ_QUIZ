@@ -86,12 +86,28 @@ class AuthRepository {
    */
   selectComments = async (quizId) => {
     // 조회된 댓글 리스트
-    const selectComments = QuizComment.findAll({
+    const selectComments = await QuizComment.findAll({
       where: {
         quizId,
       },
+      attributes: ['commentId', 'quizId', 'content', 'createdAt', 'updatedAt'],
       order: [['createdAt', 'DESC']],
+      include: [
+        {
+          model: Users,
+          attributes: ['nickname'],
+        },
+      ],
     });
+
+    const comments = selectComments.map((comment) => ({
+      commentId: comment.commentId,
+      quizId: comment.quizId,
+      nickname: comment.User.nickname,
+      content: comment.content,
+      createdAt: comment.createdAt,
+      updatedAt: comment.updatedAt,
+    }));
 
     return selectComments;
   };

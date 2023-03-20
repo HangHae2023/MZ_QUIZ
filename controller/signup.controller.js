@@ -1,5 +1,7 @@
+const Joi = require('joi');
 const SignupService = require('../services/signup.service');
 const { InvalidParamsError } = require('../exceptions/index.exception');
+const { ValidationError } = require('../exceptions/index.exception');
 
 class SignupController {
   constructor() {
@@ -19,10 +21,21 @@ class SignupController {
         throw new InvalidParamsError();
       }
 
+      const userSchema = Joi.object({
+        userId: Joi.string().required(),
+        nickname: Joi.string().required(),
+        password: Joi.string().required(),
+      });
+
+      const validate = userSchema.validate({ userId, password, nickname });
+      if (validate.error) {
+        throw new ValidationError('입력형식을 확인해 주세요.');
+      }
+
       const User = await this.signupService.userSignup(
         userId,
-        nickname,
-        password
+        password,
+        nickname
       );
 
       if (!User) {
@@ -46,10 +59,11 @@ class SignupController {
 
       const User = await this.signupService.isIDDuple(userId);
 
-      //if(User) {
-      //  return res.status(200).send({ userId });}
-
-      return res.status(200).send({ isDuplicated });
+      if (User) {
+        return res
+          .status(200)
+          .json({ success: true, message: '사용가능한 아이디입니다' });
+      }
     } catch (error) {
       next(error);
     }
@@ -64,10 +78,11 @@ class SignupController {
 
       const User = await this.signupService.isNicknameDuple(nickname);
 
-      //if(User) {
-      //  return res.status(200).send({ nickname });}
-
-      return res.status(200).send({ isDuplicated });
+      if (User) {
+        return res
+          .status(200)
+          .json({ success: true, message: '사용가능한 닉네임입니다' });
+      }
     } catch (error) {
       next(error);
     }

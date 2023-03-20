@@ -21,16 +21,16 @@ module.exports = (req, res, next) => {
       jwt.verify(tokenValue, process.env.SECRET_KEY, (err, decoded) => {
         if (err) {
           // 토큰이 유효하지 않은 경우
-          res.clearCookie('authorization');
+          // res.clearCookie('authorization');
           return res.status(403).send({
             success: false,
             errorMessage: '다시 로그인이 필요합니다.',
           });
         } else {
-          // 토큰이 유효하지 않은 경우
+          // 토큰이 유효한 경우
           return res.status(403).send({
-            success: false,
-            errorMessage: '이미 로그인이 되어있습니다.',
+            success: true,
+            errorMessage: '유효한 상태입니다',
           });
         }
       });

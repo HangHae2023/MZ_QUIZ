@@ -6,4 +6,8 @@ const createHashPassword = async (password) => {
   return bcrypt.hash(password, Number(process.env.SALT_ITERATIONS_CNT));
 };
 
-module.exports = { createHashPassword };
+const comparePassword = (enteredPassword, hashedPassword) => {
+  return bcrypt.compare(enteredPassword, hashedPassword);
+};
+
+module.exports = { createHashPassword, comparePassword };

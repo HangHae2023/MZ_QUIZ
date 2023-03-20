@@ -1,3 +1,4 @@
+const Joi = require('joi');
 const SignupRepository = require('../repositories/signup.repository');
 const { ValidationError } = require('../exceptions/index.exception');
 const {
@@ -5,49 +6,47 @@ const {
   comparePassword,
 } = require('../modules/cryptoUtils.js');
 
-const Joi = require('joi');
-
-const re_nickname = /^[a-zA-Z0-9]{3,10}$/;
-const re_password = /^[a-zA-Z0-9]{4,30}$/;
-
-const userSchema = Joi.object({
-  nickname: Joi.string().pattern(re_nickname).required(),
-  password: Joi.string().pattern(re_password).required(),
-  confirm: Joi.string(),
-});
-
 class SignupService {
   constructor() {
     this.signupRepository = new SignupRepository();
   }
 
   isIDDuple = async (userId) => {
-    await userSchema.validate({ userId });
-
-    const existingUser = await this.signupRepository.isIDDuple(userId);
+    const existingUser = await this.signupRepository.isIDDuple(
+      userId.toLowerCase()
+    );
     if (existingUser.length) {
       throw new ValidationError('중복된 아이디입니다.');
     }
-    return res
-      .status(200)
-      .send({ userId, success: true, message: '사용가능한 아이디입니다' });
+    return { success: true, message: '사용가능한 아이디입니다' };
   };
 
   isNicknameDuple = async (nickname) => {
-    await userSchema.validate({ nickname });
-
-    const existingUser = await this.signupRepository.isNicknameDuple(nickname);
+    const existingUser = await this.signupRepository.isNicknameDuple(
+      nickname.toLowerCase()
+    );
     if (existingUser.length) {
       throw new ValidationError('중복된 닉네임입니다.');
     }
-    return res
-      .status(200)
-      .send({ nickname, success: true, message: '사용가능한 닉네임입니다' });
+    return { success: true, message: '사용가능한 닉네임입니다' };
   };
 
   userSignup = async (userId, password, nickname) => {
     try {
-      await userSchema.validate({ userId, password, nickname });
+      const existingUser = await this.signupRepository.findByID(
+        userId.toLowerCase()
+      );
+
+      if (existingUser.length) {
+        throw new ValidationError('중복된 아이디입니다.');
+      }
+
+      const existingUser2 = await this.signupRepository.findBynickname(
+        nickname.toLowerCase()
+      );
+      if (existingUser2.length) {
+        throw new ValidationError('중복된 닉네임 입니다.');
+      }
 
       const hashedPassword = await createHashPassword(password);
 
@@ -58,10 +57,13 @@ class SignupService {
       );
 
       return { success: true, message: '회원가입에 성공했습니다' };
-    } catch (err) {
-      throw new ValidationError('예상못한 에러');
+    } catch (error) {
+      if (error instanceof ValidationError) {
+        throw error;
+      } else {
+        throw new Error('요청한 데이터 형식이 올바르지 않습니다.');
+      }
     }
   };
 }
-
 module.exports = SignupService;

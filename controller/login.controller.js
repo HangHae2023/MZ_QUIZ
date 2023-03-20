@@ -29,15 +29,15 @@ class LoginController {
       let expires = new Date();
       expires.setMinutes(expires.getMinutes() + 60);
 
-      // res.cookie('authorization', `Bearer ${token}`, {
-      //   expires: expires,
-      // });
+      // authorization 헤더 설정
       res.set('Authorization', `Bearer ${token}`);
 
-      return res.status(200).json({
-        success: true,
-        message: '로그인에 성공했습니다.',
-      });
+      // res.cookie('authorization', `Bearer ${token}`, {
+      //   secure: false,
+      //   httpOnly: true,
+      // })
+
+      return res.send('Login success');
     } catch (error) {
       next(error);
     }
@@ -45,27 +45,26 @@ class LoginController {
 
   checkLogin = async (req, res, next) => {
     try {
-      const cookies = req.cookies['authorization'];
-      if (!cookies) {
-        return res.status(403).json({
-          success: false,
-          message: '로그인이 필요한 기능입니다.',
-        });
-      }
+      const authorization = req.headers.Authorization;
 
-      const [tokenType, tokenValue] = cookies.split(' ');
-      if (tokenType !== 'Bearer') {
-        res.clearCookie('Cookie');
-        return res.status(403).json({
-          success: false,
-          message: '다시 로그인이 필요합니다.',
-        });
-      } else {
-        return res.status(true).json({
-          success: true,
-          message: '유효한 상태입니다.',
-        });
-      }
+      const [tokenType, tokenValue] = authorization.split(' ');
+
+      jwt.verify(tokenValue, process.env.SECRET_KEY, (err, decoded) => {
+        if (err) {
+          // 토큰이 유효하지 않은 경우
+          // res.clearCookie('authorization');
+          return res.status(403).send({
+            success: false,
+            errorMessage: '다시 로그인이 필요합니다.',
+          });
+        } else {
+          // 토큰이 유효한 경우
+          return res.status(403).send({
+            success: true,
+            errorMessage: '유효한 상태입니다',
+          });
+        }
+      });
     } catch (error) {
       next(error);
     }

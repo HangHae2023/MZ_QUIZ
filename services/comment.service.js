@@ -1,5 +1,6 @@
 require('dotenv').config();
 
+const Boom = require('boom');
 const CommentRepository = require('../repositories/comment.repository');
 const CustomError = require('../middlewares/errorHandler');
 
@@ -17,11 +18,7 @@ class AuthService {
     const searchQuiz = await this.commentRepository.findQuiz(quizId);
 
     if (!searchQuiz) {
-      throw new CustomError(
-        '해당 퀴즈 게시글은 존재하지 않습니다.',
-        404,
-        false
-      );
+      throw Boom.notFound('해당 퀴즈 게시글은 존재하지 않습니다.', false);
     }
 
     const createUser = await this.commentRepository.writeComment(
@@ -42,11 +39,7 @@ class AuthService {
     const searchQuiz = await this.commentRepository.findQuiz(quizId);
 
     if (!searchQuiz) {
-      throw new CustomError(
-        '해당 퀴즈 게시글은 존재하지 않습니다.',
-        404,
-        false
-      );
+      throw Boom.forbidden('댓글의 수정 권한이 없습니다.', false);
     }
 
     const selectComments = await this.commentRepository.selectComments(quizId);
@@ -68,7 +61,7 @@ class AuthService {
     );
 
     if (!serachQuizComment) {
-      throw new CustomError('댓글의 수정 권한이 없습니다.', 403, false);
+      throw Boom.forbidden('댓글의 수정 권한이 없습니다.', false);
     }
 
     const updateComment = await this.commentRepository.updateComment(
@@ -93,7 +86,7 @@ class AuthService {
     );
 
     if (!serachQuizComment) {
-      throw new CustomError('댓글의 삭제 권한이 없습니다.', 403, false);
+      throw Boom.forbidden('댓글의 삭제 권한이 없습니다.', false);
     }
 
     const deleteComment = await this.commentRepository.deleteComment(commentId);

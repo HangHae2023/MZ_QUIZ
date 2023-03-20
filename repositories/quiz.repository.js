@@ -2,11 +2,12 @@ const { QuizPost, Users } = require('../models');
 const { parseModelToFlatObject } = require('../helpers/sequelize.helper');
 // const { Op } = require('sequelize');
 
-class QuizRepository extends QuizPost { // QuizPost 모델을 상속하는 QuizRepository 클래스 선언
+class QuizRepository extends QuizPost {
+  // QuizPost 모델을 상속하는 QuizRepository 클래스 선언
   constructor() {
     super();
   }
-   // 모든 퀴즈를 가져오는 함수
+  // 모든 퀴즈를 가져오는 함수
   getAllQuiz = async () => {
     const quiz = await QuizPost.findAll({
       attributes: [
@@ -16,7 +17,7 @@ class QuizRepository extends QuizPost { // QuizPost 모델을 상속하는 QuizR
         'explain',
         'createdAt',
         'updatedAt',
-        'resourceUrl'
+        'resourceUrl',
       ],
       include: [
         {
@@ -24,8 +25,8 @@ class QuizRepository extends QuizPost { // QuizPost 모델을 상속하는 QuizR
           attributes: ['userId', 'nickname'],
         },
       ],
-      group: ['QuizPost.quizId'],  // quizId로 그룹화하여 집계
-      order: [['createdAt', 'DESC']],  // 생성일 기준으로 내림차순 정렬
+      group: ['QuizPost.quizId'], // quizId로 그룹화하여 집계
+      order: [['createdAt', 'DESC']], // 생성일 기준으로 내림차순 정렬
       raw: true, // raw: true를 하면 데이터를 JSON 형태로 반환해준다.
     });
 
@@ -42,7 +43,7 @@ class QuizRepository extends QuizPost { // QuizPost 모델을 상속하는 QuizR
         'explain',
         'createdAt',
         'updatedAt',
-        'resourceUrl'
+        'resourceUrl',
       ],
       where: { quizId },
       include: [
@@ -56,7 +57,7 @@ class QuizRepository extends QuizPost { // QuizPost 모델을 상속하는 QuizR
 
     return quiz;
   };
-   // 새로운 퀴즈를 생성하는 함수
+  // 새로운 퀴즈를 생성하는 함수
   createQuiz = async (userId, title, answer, explain, resourceUrl) => {
     const createQuizData = await QuizPost.create({
       userId,

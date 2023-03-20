@@ -6,10 +6,10 @@ class LoginRepository extends Users {
     super();
   }
 
-  async findByIDPW(userId, password) {
+  async findByID(userId) {
     const user = await Users.findOne({
       where: {
-        [Op.and]: [{ userId }, { password }],
+        userId,
       },
     });
 

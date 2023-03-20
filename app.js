@@ -5,13 +5,14 @@ const cookieParser = require('cookie-parser');
 const app = express();
 const cors = require('cors');
 
-app.use(cors({
-  origin: 'http://localhost:3000',
-  credentials: true,
-  optionsSuccessStatus: 200,
-  exposedHeaders: ['Authorization', 'Set-Cookie']
- }));
-
+app.use(
+  cors({
+    origin: 'http://localhost:3000',
+    credentials: true,
+    optionsSuccessStatus: 200,
+    exposedHeaders: ['Authorization'],
+  })
+);
 
 const PORT = process.env.SERVER_PORT;
 
@@ -26,10 +27,9 @@ app.use('/', routes);
 
 // 에러 핸들러
 app.use((err, req, res, next) => {
-  console.error(err);
-  return res.status(err.status || 500).json({
-    success: err.expect || false,
-    errorMessage: err.message || '서버 에러가 발생했습니다.',
+  return res.status(err.output.payload.statusCode || 500).json({
+    success: err.data || false,
+    errorMessage: err.output.payload.message || '서버 에러가 발생했습니다.',
   });
 });
 

@@ -1,4 +1,5 @@
 const Joi = require('joi');
+const Boom = require('boom');
 const CustomError = require('../middlewares/errorHandler');
 const CommentService = require('../services/comment.service');
 
@@ -24,7 +25,7 @@ class AuthController {
 
       // 검증 결과를 확인한다
       if (error || content == '') {
-        throw new CustomError('댓글 내용을 입력해주세요', 412, false);
+        throw Boom.preconditionFailed('댓글 내용을 입력해주세요.', false);
       }
 
       const writeComment = await this.commentService.writeComment(
@@ -34,7 +35,7 @@ class AuthController {
       );
 
       if (writeComment == null) {
-        throw new CustomError('댓글 작성에 실패했습니다.', 400, false);
+        throw Boom.badRequest('댓글 작성에 실패했습니다.', false);
       } else {
         return res.status(200).json({
           success: true,
@@ -83,7 +84,7 @@ class AuthController {
 
       // 검증 결과를 확인한다
       if (error || content == '') {
-        throw new CustomError('댓글 내용을 입력해주세요', 412, false);
+        throw Boom.preconditionFailed('댓글 내용을 입력해주세요', false);
       }
 
       const updateComment = await this.commentService.updateComment(
@@ -93,7 +94,7 @@ class AuthController {
       );
 
       if (updateComment === 0) {
-        throw new CustomError('댓글 수정에 실패했습니다.', 400, false);
+        throw Boom.badRequest('댓글 수정에 실패했습니다', false);
       } else {
         return res.status(200).json({
           success: true,
@@ -119,7 +120,7 @@ class AuthController {
       );
 
       if (deleteComment === 0) {
-        throw new CustomError('댓글 삭제에 실패했습니다.', 400, false);
+        throw Boom.badRequest('댓글 삭제에 실패했습니다', false);
       } else {
         return res.status(200).json({
           success: true,

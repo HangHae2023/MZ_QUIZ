@@ -1,4 +1,5 @@
 const Joi = require('joi');
+const Boom = require('boom');
 const QuizRepository = require('../repositories/quiz.repository');
 const CustomError = require('../middlewares/errorHandler');
 
@@ -41,10 +42,11 @@ class QuizService {
     //게시글이 존재하는지 확인
     const existQuiz = await this.quizRepository.existQuizChk(quizId);
     if (!existQuiz) {
-      throw new CustomError('게시글이 존재하지 않습니다.', 412, false);
+      throw Boom.preconditionFailed('게시글이 존재하지 않습니다.', false);
+      // throw new CustomError('게시글이 존재하지 않습니다.', 412, false);
     }
     const quiz = await this.quizRepository.getQuiz(quizId);
-    
+
     // 필요한 정보만 반환
     return {
       quizId: quiz.quizId,
@@ -61,7 +63,7 @@ class QuizService {
   };
   // 퀴즈를 생성하는 함수
   createQuiz = async (userId, title, answer, explain, resourceUrl) => {
-    const resultSchema = await quizSchema.validate({ title, answer, explain});
+    const resultSchema = await quizSchema.validate({ title, answer, explain });
     // 스키마 검증 실패 시, 각각의 필드에 대한 오류 메시지를 반환
     if (resultSchema.error && title.length < 1) {
       throw new CustomError('제목을 입력해주세요.', 412, false);
@@ -73,7 +75,13 @@ class QuizService {
       throw new CustomError('힌트 내용을 입력해주세요.', 412, false);
     }
     // 퀴즈 생성
-    await this.quizRepository.createQuiz( userId, title, answer, explain, resourceUrl );
+    await this.quizRepository.createQuiz(
+      userId,
+      title,
+      answer,
+      explain,
+      resourceUrl
+    );
   };
 
   createImgUrl = async (resourceUrl) => {

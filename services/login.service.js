@@ -3,19 +3,36 @@ require('dotenv').config();
 const LoginRepository = require('../repositories/login.repository');
 const { ValidationError } = require('../exceptions/index.exception');
 const jwt = require('jsonwebtoken');
+const { comparePassword } = require('../modules/cryptoUtils.js');
 
 class LoginService {
   constructor() {
     this.loginRepository = new LoginRepository();
   }
-  userLogin = async (userId, password) => {
-    //try{
-    const user = await this.loginRepository.findByIDPW(userId, password);
-    if (!user) {
-      throw new ValidationError('아이디 또는 패스워드를 확인해주세요.');
-    }
+  userLogin = async (userId, password, res) => {
+    try {
+      const user = await this.loginRepository.findByID(userId);
 
-    return user;
+      if (!user) {
+        throw new ValidationError('존재하지 않는 사용자입니다');
+      }
+
+      console.log(user);
+
+      const comparePw = await comparePassword(password, user.password);
+
+      if (!comparePw) {
+        throw new ValidationError('패스워드를 확인해주세요.');
+      }
+
+      return { success: true, message: '로그인에 성공했습니다' };
+    } catch (error) {
+      if (error instanceof ValidationError) {
+        throw error;
+      } else {
+        throw new Error('로그인에 실패하였습니다.');
+      }
+    }
   };
 
   generateToken = async (userId) => {
@@ -23,8 +40,8 @@ class LoginService {
       expiresIn: '30m',
     });
 
+    //return token;
     return token;
   };
 }
-
 module.exports = LoginService;
