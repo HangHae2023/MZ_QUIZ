@@ -5,7 +5,8 @@ const { Users } = require('../models');
 // 로그인 되어 있는 유저일 경우 Error를 반환한다.
 module.exports = (req, res, next) => {
   try {
-    const { authorization } = req.cookies;
+    // const { authorization } = req.cookies;
+    const authorization = req.headers.authorization;
 
     if (authorization) {
       const [tokenType, tokenValue] = authorization.split(' ');

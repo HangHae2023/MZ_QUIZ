@@ -4,7 +4,8 @@ const jwt = require('jsonwebtoken');
 const { Users } = require('../models');
 
 module.exports = async (req, res, next) => {
-  const { authorization } = req.cookies;
+  const authorization = req.headers.authorization;
+  // const { authorization } = req.cookies;
 
   const [authType, authToken] = (authorization ?? '').split(' ');
 

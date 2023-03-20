@@ -1,11 +1,17 @@
 require('dotenv').config();
-const multer = require('multer');
-const fs = require('fs');
-const path = require('path');
 const express = require('express');
 const morgan = require('morgan');
 const cookieParser = require('cookie-parser');
 const app = express();
+const cors = require('cors');
+
+app.use(cors({
+  origin: 'http://localhost:3000',
+  credentials: true,
+  optionsSuccessStatus: 200,
+  exposedHeaders: ['Authorization', 'Set-Cookie']
+ }));
+
 
 const PORT = process.env.SERVER_PORT;
 
