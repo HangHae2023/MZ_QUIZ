@@ -1,7 +1,6 @@
 const Joi = require('joi');
 const Boom = require('boom');
 const QuizRepository = require('../repositories/quiz.repository');
-const CustomError = require('../middlewares/errorHandler');
 
 //파라미터 값 검증
 const quizSchema = Joi.object({
@@ -66,13 +65,13 @@ class QuizService {
     const resultSchema = await quizSchema.validate({ title, answer, explain });
     // 스키마 검증 실패 시, 각각의 필드에 대한 오류 메시지를 반환
     if (resultSchema.error && title.length < 1) {
-      throw new CustomError('제목을 입력해주세요.', 412, false);
+      throw Boom.preconditionFailed('제목을 입력해주세요.', false);
     }
     if (resultSchema.error && answer.length < 1) {
-      throw new CustomError('해설 내용을 입력해주세요.', 412, false);
+      throw Boom.preconditionFailed('해설 내용을 입력해주세요.', false);
     }
     if (resultSchema.error && explain.length < 1) {
-      throw new CustomError('힌트 내용을 입력해주세요.', 412, false);
+      throw Boom.preconditionFailed('힌트 내용을 입력해주세요.', false);
     }
     // 퀴즈 생성
     await this.quizRepository.createQuiz(
@@ -92,21 +91,21 @@ class QuizService {
     const resultSchema = await quizSchema.validate({ title, answer, explain });
     // 스키마 검증 실패 시, 각각의 필드에 대한 오류 메시지를 반환
     if (resultSchema.error && title.length < 1) {
-      throw new CustomError('제목을 입력해주세요.', 412, false);
+      throw Boom.preconditionFailed('제목을 입력해주세요.', false);
     }
     if (resultSchema.error && answer.length < 1) {
-      throw new CustomError('해설 내용을 입력해주세요.', 412, false);
+      throw Boom.preconditionFailed('해설 내용을 입력해주세요.', false);
     }
     if (resultSchema.error && explain.length < 1) {
-      throw new CustomError('힌트 내용을 입력해주세요.', 412, false);
+      throw Boom.preconditionFailed('힌트 내용을 입력해주세요.', false);
     }
     const existQuiz = await this.quizRepository.existQuizChk(quizId);
     if (!existQuiz) {
-      throw new CustomError('게시글이 존재하지 않습니다.', 412, false);
+      throw Boom.notFound('게시글이 존재하지 않습니다.', false);
     }
     const userAuthChk = await this.quizRepository.findUpdateAuth(quizId);
     if (userAuthChk.userId !== userId) {
-      throw new CustomError('수정할 권한이 없습니다.', 412, false);
+      throw Boom.forbidden('수정할 권한이 없습니다.' , false);
     }
     //퀴즈 정보 업데이트
     await this.quizRepository.updateQuiz(
@@ -121,23 +120,30 @@ class QuizService {
   deleteQuiz = async (userId, quizId) => {
     const existQuiz = await this.quizRepository.existQuizChk(quizId);
     if (!existQuiz) {
-      throw new CustomError('게시글이 존재하지 않습니다.', 412, false);
+      throw Boom.notFound('게시글이 존재하지 않습니다.', false);
     }
     const userAuthChk = await this.quizRepository.findUpdateAuth(quizId);
     if (userAuthChk.userId !== userId) {
-      throw new CustomError('삭제 권한이 없습니다.', 412, false);
+      throw Boom.forbidden('삭제할 권한이 없습니다.' , false);
     }
     await this.quizRepository.deleteQuiz(userId, quizId);
   };
   //정답을 확인하는 함수
   checkAnswer = async (answer) => {
     if (answer.length < 1) {
-      throw new CustomError('정답을 입력해주세요.', 412, false);
+      throw Boom.preconditionFailed('정답을 입력해주세요.', false);
     }
     const checkAnswer = await this.quizRepository.checkAnswer(answer);
     if (!checkAnswer) {
       return false;
     } else return true;
+  };
+  //권한 확인
+  checkAuth = async (quizId, userId) => {
+    const userAuthChk = await this.quizRepository.findUpdateAuth(quizId);
+    if (userAuthChk.userId !== userId) {
+      throw Boom.forbidden('권한이 없습니다.' , false);
+    }
   };
 }
 module.exports = QuizService;

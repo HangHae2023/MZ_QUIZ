@@ -113,6 +113,21 @@ class QuizController {
       next(error);
     }
   };
+  // 권한 확인
+  getAuth = async (req, res, next) => {
+    try {
+      const { quizId } = req.params;
+      const { userId } = res.locals.user;
+      await this.quizService.checkAuth(quizId, userId)
+      // const chk = await this.quizService.checkAuth(quizId, userId)
+      return res.status(200).json({
+        success: true,
+        message: '수정 및 삭제 권한이 확인 되었습니다.',
+      });
+    } catch (error) {
+      next(error);
+    }
+  };
   // 정답 확인
   checkAnswer = async (req, res, next) => {
     try {
