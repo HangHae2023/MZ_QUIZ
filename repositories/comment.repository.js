@@ -1,4 +1,4 @@
-const { QuizPost, QuizComment } = require('../models');
+const { QuizPost, QuizComment, Users } = require('../models');
 
 class AuthRepository {
   /**
@@ -85,13 +85,14 @@ class AuthRepository {
    * @return {조회된 댓글 리스트} QuizComments.findAll()
    */
   selectComments = async (quizId) => {
+
+    console.log("\n\n왜",quizId+"\n\n?")
     // 조회된 댓글 리스트
     const selectComments = await QuizComment.findAll({
       where: {
         quizId,
       },
       attributes: ['commentId', 'quizId', 'content', 'createdAt', 'updatedAt'],
-      order: [['createdAt', 'DESC']],
       include: [
         {
           model: Users,
@@ -109,7 +110,7 @@ class AuthRepository {
       updatedAt: comment.updatedAt,
     }));
 
-    return comments;
+    return selectComments;
   };
 
   /**
