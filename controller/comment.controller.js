@@ -54,11 +54,11 @@ class AuthController {
     try {
       const { quizId } = req.params;
 
-      const writeComment = await this.commentService.selectComments(quizId);
+      const selectComments = await this.commentService.selectComments(quizId);
 
       return res.status(200).json({
         success: true,
-        comments: writeComment,
+        comments: selectComments,
       });
     } catch (err) {
       next(err);

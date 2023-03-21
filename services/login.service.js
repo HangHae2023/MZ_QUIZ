@@ -17,15 +17,14 @@ class LoginService {
         throw new ValidationError('존재하지 않는 사용자입니다');
       }
 
-      console.log(user);
-
       const comparePw = await comparePassword(password, user.password);
 
       if (!comparePw) {
         throw new ValidationError('패스워드를 확인해주세요.');
       }
 
-      return { success: true, message: '로그인에 성공했습니다' };
+      return user;
+
     } catch (error) {
       if (error instanceof ValidationError) {
         throw error;

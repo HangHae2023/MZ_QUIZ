@@ -24,6 +24,7 @@ class LoginController {
 
       const UserId = user.userId;
 
+
       const token = await this.loginService.generateToken(UserId);
 
       let expires = new Date();
@@ -37,7 +38,10 @@ class LoginController {
       //   httpOnly: true,
       // })
 
-      return res.send('Login success');
+      return res.status(200).json({
+        success: true,
+        message: '로그인에 성공했습니다',
+      });
     } catch (error) {
       next(error);
     }
@@ -45,7 +49,7 @@ class LoginController {
 
   checkLogin = async (req, res, next) => {
     try {
-      const authorization = req.headers.Authorization;
+      const authorization = req.headers.authorization;
 
       const [tokenType, tokenValue] = authorization.split(' ');
 

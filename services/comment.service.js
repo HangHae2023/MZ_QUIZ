@@ -39,7 +39,7 @@ class AuthService {
     const searchQuiz = await this.commentRepository.findQuiz(quizId);
 
     if (!searchQuiz) {
-      throw Boom.forbidden('댓글의 수정 권한이 없습니다.', false);
+      throw Boom.forbidden('해당 퀴즈 게시글은 존재하지 않습니다.', false);
     }
 
     const selectComments = await this.commentRepository.selectComments(quizId);

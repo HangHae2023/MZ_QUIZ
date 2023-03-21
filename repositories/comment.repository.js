@@ -85,6 +85,7 @@ class AuthRepository {
    * @return {조회된 댓글 리스트} QuizComments.findAll()
    */
   selectComments = async (quizId) => {
+
     // 조회된 댓글 리스트
     const selectComments = await QuizComment.findAll({
       where: {
@@ -98,7 +99,7 @@ class AuthRepository {
           attributes: ['nickname'],
         },
       ],
-    });
+    })
 
     const comments = selectComments.map((comment) => ({
       commentId: comment.commentId,
@@ -109,7 +110,7 @@ class AuthRepository {
       updatedAt: comment.updatedAt,
     }));
 
-    return selectComments;
+    return comments;
   };
 }
 
