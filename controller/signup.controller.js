@@ -2,6 +2,7 @@ const Joi = require('joi');
 const SignupService = require('../services/signup.service');
 const { InvalidParamsError } = require('../exceptions/index.exception');
 const { ValidationError } = require('../exceptions/index.exception');
+const Boom = require('boom');
 
 class SignupController {
   constructor() {
@@ -18,7 +19,7 @@ class SignupController {
     try {
       const { userId, password, nickname } = req.body;
       if (!userId || !password || !nickname) {
-        throw new InvalidParamsError();
+        throw Boom.badRequest('데이터를 입력해주세요', false);
       }
 
       const userSchema = Joi.object({
@@ -29,7 +30,7 @@ class SignupController {
 
       const validate = userSchema.validate({ userId, password, nickname });
       if (validate.error) {
-        throw new ValidationError('입력형식을 확인해 주세요.');
+        throw Boom.badData('입력형식을 확인해 주세요', false);
       }
 
       const User = await this.signupService.userSignup(
@@ -39,7 +40,7 @@ class SignupController {
       );
 
       if (!User) {
-        throw new InvalidParamsError('회원 생성에 실패했습니다', 400);
+        throw Boom.notImplemented('회원 생성에 실패했습니다', false);
       }
 
       return res
@@ -54,7 +55,7 @@ class SignupController {
     try {
       const { userId } = req.body;
       if (!userId) {
-        throw new InvalidParamsError();
+        throw Boom.badRequest('ID를 입력해주세요', false);
       }
 
       const User = await this.signupService.isIDDuple(userId);
@@ -62,7 +63,7 @@ class SignupController {
       if (User) {
         return res
           .status(200)
-          .json({ success: true, message: '사용가능한 아이디입니다' });
+          .json({ success: User.success, message: User.message });
       }
     } catch (error) {
       next(error);
@@ -73,7 +74,7 @@ class SignupController {
     try {
       const { nickname } = req.body;
       if (!nickname) {
-        throw new InvalidParamsError();
+        throw Boom.badRequest('닉네임을 입력해주세요', false);
       }
 
       const User = await this.signupService.isNicknameDuple(nickname);
@@ -81,7 +82,7 @@ class SignupController {
       if (User) {
         return res
           .status(200)
-          .json({ success: true, message: '사용가능한 닉네임입니다' });
+          .json({ success: User.success, message: User.message });
       }
     } catch (error) {
       next(error);

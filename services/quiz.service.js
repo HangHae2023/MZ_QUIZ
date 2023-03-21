@@ -105,7 +105,7 @@ class QuizService {
     }
     const userAuthChk = await this.quizRepository.findUpdateAuth(quizId);
     if (userAuthChk.userId !== userId) {
-      throw Boom.forbidden('수정할 권한이 없습니다.' , false);
+      throw Boom.forbidden('수정할 권한이 없습니다.', false);
     }
     //퀴즈 정보 업데이트
     await this.quizRepository.updateQuiz(
@@ -124,7 +124,7 @@ class QuizService {
     }
     const userAuthChk = await this.quizRepository.findUpdateAuth(quizId);
     if (userAuthChk.userId !== userId) {
-      throw Boom.forbidden('삭제할 권한이 없습니다.' , false);
+      throw Boom.forbidden('삭제할 권한이 없습니다.', false);
     }
     await this.quizRepository.deleteQuiz(userId, quizId);
   };
@@ -142,7 +142,7 @@ class QuizService {
   checkAuth = async (quizId, userId) => {
     const userAuthChk = await this.quizRepository.findUpdateAuth(quizId);
     if (userAuthChk.userId !== userId) {
-      throw Boom.forbidden('권한이 없습니다.' , false);
+      throw Boom.forbidden('권한이 없습니다.', false);
     }
   };
 }

@@ -89,7 +89,7 @@ class QuizController {
       const { userId } = res.locals.user;
       const { quizId } = req.params;
 
-      console.log('퀴즈 수정 진입', title, answer, explain, userId, quizId)
+      console.log('퀴즈 수정 진입', title, answer, explain, userId, quizId);
 
       await this.quizService.updateQuiz(userId, quizId, title, answer, explain);
       return res.status(200).json({
@@ -120,7 +120,7 @@ class QuizController {
     try {
       const { quizId } = req.params;
       const { userId } = res.locals.user;
-      await this.quizService.checkAuth(quizId, userId)
+      await this.quizService.checkAuth(quizId, userId);
       // const chk = await this.quizService.checkAuth(quizId, userId)
       return res.status(200).json({
         success: true,

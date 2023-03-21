@@ -1,5 +1,6 @@
 const LoginService = require('../services/login.service');
 const { InvalidParamsError } = require('../exceptions/index.exception');
+const Boom = require('boom');
 
 class LoginController {
   constructor() {
@@ -17,13 +18,12 @@ class LoginController {
       const { userId, password } = req.body;
 
       if (!userId || !password) {
-        throw new InvalidParamsError();
+        throw Boom.forbidden('아이디 혹은 비밀번호를 입력해주세요.', false);
       }
 
       const user = await this.loginService.userLogin(userId, password);
 
       const UserId = user.userId;
-
 
       const token = await this.loginService.generateToken(UserId);
 

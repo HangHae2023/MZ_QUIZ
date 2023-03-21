@@ -85,7 +85,6 @@ class AuthRepository {
    * @return {조회된 댓글 리스트} QuizComments.findAll()
    */
   selectComments = async (quizId) => {
-
     // 조회된 댓글 리스트
     const selectComments = await QuizComment.findAll({
       where: {
@@ -99,7 +98,7 @@ class AuthRepository {
           attributes: ['nickname'],
         },
       ],
-    })
+    });
 
     const comments = selectComments.map((comment) => ({
       commentId: comment.commentId,
@@ -111,6 +110,18 @@ class AuthRepository {
     }));
 
     return comments;
+  };
+
+  /**
+   *
+   * @param {Integer} commentId
+   * @returns 검색된 댓글 정보
+   */
+  findUpdateAuth = async (commentId) => {
+    const findAuth = await QuizComment.findOne({
+      where: { commentId },
+    });
+    return findAuth;
   };
 }
 

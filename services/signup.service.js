@@ -16,9 +16,9 @@ class SignupService {
       userId.toLowerCase()
     );
     if (existingUser.length) {
-      throw new ValidationError('중복된 아이디입니다.');
+      throw Boom.badData('중복된 아이디 입니다', false);
     }
-    return { success: true, message: '사용가능한 아이디입니다' };
+    return existingUser;
   };
 
   isNicknameDuple = async (nickname) => {
@@ -26,9 +26,9 @@ class SignupService {
       nickname.toLowerCase()
     );
     if (existingUser.length) {
-      throw new ValidationError('중복된 닉네임입니다.');
+      throw Boom.badData('중복된 닉네임 입니다', false);
     }
-    return { success: true, message: '사용가능한 닉네임입니다' };
+    return existingUser;
   };
 
   userSignup = async (userId, password, nickname) => {
@@ -38,14 +38,14 @@ class SignupService {
       );
 
       if (existingUser.length) {
-        throw new ValidationError('중복된 아이디입니다.');
+        throw Boom.badData('중복된 아이디 입니다', false);
       }
 
       const existingUser2 = await this.signupRepository.findBynickname(
         nickname.toLowerCase()
       );
       if (existingUser2.length) {
-        throw new ValidationError('중복된 닉네임 입니다.');
+        throw Boom.badData('중복된 닉네임 입니다', false);
       }
 
       const hashedPassword = await createHashPassword(password);
@@ -56,9 +56,9 @@ class SignupService {
         nickname
       );
 
-      return { success: true, message: '회원가입에 성공했습니다' };
+      return user;
     } catch (error) {
-      if (error instanceof ValidationError) {
+      if (error instanceof Boom) {
         throw error;
       } else {
         throw new Error('요청한 데이터 형식이 올바르지 않습니다.');

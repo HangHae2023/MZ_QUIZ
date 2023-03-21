@@ -131,6 +131,25 @@ class AuthController {
       next(err);
     }
   };
+
+  /**
+   * 댓글 권한 확인
+   * @returns res
+   */
+  getAuth = async (req, res, next) => {
+    try {
+      const { commentId } = req.params;
+      const { userId } = res.locals.user;
+      await this.commentService.checkAuth(commentId, userId);
+      // const chk = await this.quizService.checkAuth(quizId, userId)
+      return res.status(200).json({
+        success: true,
+        message: '수정 및 삭제 권한이 확인 되었습니다.',
+      });
+    } catch (error) {
+      next(error);
+    }
+  };
 }
 
 module.exports = AuthController;

@@ -14,5 +14,7 @@ router.get('/:quizId', commentController.selectComments);
 router.put('/:commentId', authMiddleware, commentController.updateComment);
 // 댓글 삭제 - authMiddleware 추가 필요
 router.delete('/:commentId', authMiddleware, commentController.deleteComment);
+// 댓글 권한 조회
+router.get('/authChk/:commentId', authMiddleware, commentController.getAuth);
 
 module.exports = router;

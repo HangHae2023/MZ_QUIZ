@@ -93,6 +93,19 @@ class AuthService {
 
     return deleteComment;
   };
+
+  /**
+   * 댓글 수정/삭제 권한 조회
+   * @param {Integer} commentId
+   * @param {String} userId
+   * @returns Boom Error Handler
+   */
+  checkAuth = async (commentId, userId) => {
+    const userAuthChk = await this.commentRepository.findUpdateAuth(commentId);
+    if (userAuthChk.userId !== userId) {
+      throw Boom.forbidden('권한이 없습니다.', false);
+    }
+  };
 }
 
 module.exports = AuthService;

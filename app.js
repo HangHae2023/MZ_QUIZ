@@ -25,11 +25,10 @@ app.use(morgan('dev'));
 
 app.use('/', routes);
 
-console.log("\n\n\n\서버 API 요청 \n\n\n");
+console.log('\n\n\n서버 API 요청 \n\n\n');
 // 에러 핸들러
 app.use((err, req, res, next) => {
-
-  console.log('\n\n\n\n에러 핸들러 ==>>', err + "\n\n\n\n")
+  console.log('\n\n\n\n에러 핸들러 ==>>', err + '\n\n\n\n');
 
   return res.status(err.output.payload.statusCode || 500).json({
     success: err.data || false,
