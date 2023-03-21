@@ -32,7 +32,7 @@ class QuizService {
         likes: quiz.likes,
         createdAt: quiz.createdAt,
         updatedAt: quiz.updatedAt,
-        imgUrl: quiz.resourceUrl,
+        resourceUrl: quiz.resourceUrl,
       };
     });
   };
@@ -42,7 +42,6 @@ class QuizService {
     const existQuiz = await this.quizRepository.existQuizChk(quizId);
     if (!existQuiz) {
       throw Boom.preconditionFailed('게시글이 존재하지 않습니다.', false);
-      // throw new CustomError('게시글이 존재하지 않습니다.', 412, false);
     }
     const quiz = await this.quizRepository.getQuiz(quizId);
 
@@ -57,7 +56,7 @@ class QuizService {
       likes: quiz.likes,
       createdAt: quiz.createdAt,
       updatedAt: quiz.updatedAt,
-      imgUrl: quiz.resourceUrl,
+      resourceUrl: quiz.resourceUrl,
     };
   };
   // 퀴즈를 생성하는 함수

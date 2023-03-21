@@ -1,6 +1,8 @@
 const Joi = require('joi');
 const SignupRepository = require('../repositories/signup.repository');
 const { ValidationError } = require('../exceptions/index.exception');
+const Boom = require('boom');
+
 const {
   createHashPassword,
   comparePassword,
