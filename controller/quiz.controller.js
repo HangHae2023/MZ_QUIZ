@@ -85,7 +85,7 @@ class QuizController {
   // 퀴즈 수정
   updateQuiz = async (req, res, next) => {
     try {
-      const { title, answer, explain } = req.body;
+      const { title, answer, explain, resourceUrl = null } = req.body;
       const { userId } = res.locals.user;
       const { quizId } = req.params;
 

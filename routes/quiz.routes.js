@@ -22,7 +22,7 @@ router.post(
 );
 router.get('/:quizId', quizController.getQuiz);
 router.post('/:quizId', authMiddleware, quizController.checkAnswer);
-router.put('/:quizId', authMiddleware, quizController.updateQuiz);
+router.put('/:quizId', upload.single('img'), authMiddleware, quizController.updateQuiz);
 router.delete('/:quizId', authMiddleware, quizController.deleteQuiz);
 router.get('/authChk/:quizId', authMiddleware, quizController.getAuth);
 
