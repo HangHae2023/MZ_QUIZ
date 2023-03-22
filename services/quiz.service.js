@@ -86,7 +86,7 @@ class QuizService {
     await this.quizRepository.createImgUrl(resourceUrl);
   };
   // 퀴즈를 수정하는 함수
-  updateQuiz = async (userId, quizId, title, answer, explain) => {
+  updateQuiz = async (userId, quizId, title, answer, explain, resourceUrl) => {
     const resultSchema = await quizSchema.validate({ title, answer, explain });
     // 스키마 검증 실패 시, 각각의 필드에 대한 오류 메시지를 반환
     if (resultSchema.error && title.length < 1) {
@@ -112,7 +112,8 @@ class QuizService {
       quizId,
       title,
       answer,
-      explain
+      explain,
+      resourceUrl
     );
   };
   // 퀴즈를 삭제하는 함수
