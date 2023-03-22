@@ -8,7 +8,11 @@ class LogoutController {
 
   logout = async (req, res, next) => {
     try {
+      // res.clearCookie('authorization', { maxAge: 0 });
+
+      // 1.
       res.clearHeaders;
+
       res
         .status(200)
         .json({ success: true, message: '로그아웃이 잘 되었습니다.' });
