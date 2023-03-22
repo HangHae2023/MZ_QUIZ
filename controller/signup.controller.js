@@ -15,17 +15,34 @@ class SignupController {
    * @param {import("express").NextFunction} next - express Response
    * **/
 
+  // userSignup = async (req, res, next) => {
+  //   try {
+  //     const { userId, password, nickname } = req.body;
+  //     await this.signupService.isIDDuple(userId);
+  //     return res
+  //       .status(201)
+  //       .send({ success: true, message: '회원 가입에 성공하였습니다.' });
+  //   } catch (error) {
+  //     next(error);
+  //   }
+  // };
+
   userSignup = async (req, res, next) => {
     try {
-      const { userId, password, nickname } = req.body;
-
-      return res
-        .status(201)
-        .send({ success: true, message: '회원 가입에 성공하였습니다.' });
-    } catch (error) {
-      next(error);
+    const { userId, password, nickname } = req.body;
+    
+    const User = await this.signupService.userSignup( userId, password, nickname);
+    console.log(User.length)
+    if (!User.length) {
+    return res
+    .status(201)
+    .json({ success: true, message: '회원 가입에 성공하였습니다.'});
+    
     }
-  };
+    } catch (error) {
+    next(error);
+    }
+    };
 
   isIDDuple = async (req, res, next) => {
     try {

@@ -21,7 +21,7 @@ class LoginService {
       const comparePw = await comparePassword(password, user.password);
 
       if (!comparePw) {
-        throw Boom.badData('패스워드를 확인해주세요.', false);
+        throw Boom.unauthorized('패스워드를 확인해주세요.', false);
       }
       
       return user;
