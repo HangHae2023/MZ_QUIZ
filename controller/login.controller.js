@@ -45,9 +45,12 @@ class LoginController {
 
   checkLogin = async (req, res, next) => {
     try {
+
       const authorization = req.headers.authorization;
 
+
       const [tokenType, tokenValue] = authorization.split(' ');
+
 
       jwt.verify(tokenValue, process.env.SECRET_KEY, (err, decoded) => {
         if (err) {

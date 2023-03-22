@@ -15,13 +15,13 @@ class LoginService {
       const user = await this.loginRepository.findByID(userId);
 
       if (!user) {
-        throw Boom.notFound('존재하지 않는 사용자입니다', false);
+        throw Boom.notFound('존재하지 않는 회원입니다', false);
       }
 
       const comparePw = await comparePassword(password, user.password);
 
       if (!comparePw) {
-        throw Boom.badData('패스워드를 확인해주세요.', false);
+        throw Boom.unauthorized('패스워드를 확인해주세요.', false, 401);
       }
       
       return user;
@@ -29,7 +29,7 @@ class LoginService {
       if (error instanceof Boom) {
         throw error;
       } else {
-        throw new Error('로그인에 실패하였습니다.');
+        throw Boom.badImplementation('서버 에러가 발생했습니다', false);
       }
     }
   };

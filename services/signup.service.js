@@ -18,7 +18,7 @@ class SignupService {
       userId.toLowerCase()
     );
     if (existingUser.length) {
-      throw Boom.badData('중복된 아이디 입니다', false);
+      throw Boom.conflict('중복된 아이디 입니다', false);
     }
     return existingUser;
   };
@@ -28,7 +28,7 @@ class SignupService {
       nickname.toLowerCase()
     );
     if (existingUser.length) {
-      throw Boom.badData('중복된 닉네임 입니다', false);
+      throw Boom.conflict('중복된 닉네임 입니다', false);
     }
     return existingUser;
   };
@@ -40,14 +40,15 @@ class SignupService {
       );
 
       if (existingUser.length) {
-        throw Boom.badData('중복된 아이디 입니다', false);
+        throw Boom.conflict('중복된 아이디 입니다', false);
       }
 
-      const existingUser2 = await this.signupRepository.findBynickname(
+      const existingUser2 = await this.signupRepository.isNicknameDuple(
         nickname.toLowerCase()
       );
+
       if (existingUser2.length) {
-        throw Boom.badData('중복된 닉네임 입니다', false);
+        throw Boom.conflict('중복된 닉네임 입니다', false);
       }
 
       const hashedPassword = await createHashPassword(password);
@@ -63,7 +64,7 @@ class SignupService {
       if (error instanceof Boom) {
         throw error;
       } else {
-        throw new Error('요청한 데이터 형식이 올바르지 않습니다.');
+        throw Boom.badImplementation('서버 에러가 발생했습니다', false);
       }
     }
   };

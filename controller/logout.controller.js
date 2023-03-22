@@ -11,15 +11,7 @@ class LogoutController {
       // res.clearCookie('authorization', { maxAge: 0 });
 
       // 1.
-      res.clearHeaders();
-
-      // 2.
-      // 'Authorization' 키 값을 지우기 위해 headers 정보를 가져온다.
-      // const headers = req.headers;
-      // headers 정보 내 'Authorization' 키 값을 삭제한다.
-      // delete headers['authorization'];
-      // 변경된 headers 정보를 다시 요청(request) 객체에 할당한다.
-      // req.headers = headers;
+      res.clearHeaders;
 
       res
         .status(200)

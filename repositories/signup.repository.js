@@ -21,6 +21,7 @@ class SignupRepository extends Users {
 
   userSignup = async (userId, password, nickname) => {
     const user = await Users.create({ userId, password, nickname });
+    console.log('-----repository', user)
     return user;
   };
 

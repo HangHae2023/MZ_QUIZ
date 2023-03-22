@@ -19,10 +19,14 @@ class SignupController {
     try {
       const { userId, password, nickname } = req.body;
 
-      return res
-        .status(201)
-        .send({ success: true, message: '회원 가입에 성공하였습니다.' });
-    } catch (error) {
+      const User = await this.signupService.userSignup( userId, password, nickname);
+
+        return res
+          .status(201)
+          .json({ success: true, message: '회원 가입에 성공하였습니다.'});
+
+    
+  } catch (error) {
       next(error);
     }
   };
@@ -33,11 +37,11 @@ class SignupController {
 
       const User = await this.signupService.isIDDuple(userId);
 
-      if (!User.length) {
+
         return res
-          .status(200)
+          .status(201)
           .json({ success: true, message: "사용 가능한 아이디입니다"});
-      }
+      
     } catch (error) {
       next(error);
     }
@@ -49,12 +53,10 @@ class SignupController {
 
       const User = await this.signupService.isNicknameDuple(nickname);
 
-      if (!User.length) {
-
         return res
-          .status(200)
+          .status(201)
           .json({ success: true, message: "사용 가능한 닉네임입니다"});
-      }
+      
     } catch (error) {
       next(error);
     }
