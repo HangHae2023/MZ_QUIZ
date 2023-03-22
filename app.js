@@ -4,6 +4,7 @@ const morgan = require('morgan');
 const cookieParser = require('cookie-parser');
 const app = express();
 const cors = require('cors');
+app.use('/uploads', express.static('uploads'))
 
 app.use(
   cors({
