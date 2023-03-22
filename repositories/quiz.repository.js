@@ -82,9 +82,9 @@ class QuizRepository extends QuizPost {
     return findAuth;
   };
   // 퀴즈를 수정하는 함수
-  updateQuiz = async (userId, quizId, title, answer, explain) => {
+  updateQuiz = async (userId, quizId, title, answer, explain, resourceUrl) => {
     const updateQuiz = await QuizPost.update(
-      { title, answer, explain },
+      { title, answer, explain, resourceUrl },
       { where: { quizId, userId } }
     );
     return updateQuiz;

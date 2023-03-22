@@ -57,13 +57,22 @@ class QuizController {
   // 퀴즈 수정
   updateQuiz = async (req, res, next) => {
     try {
-      const { title, answer, explain, resourceUrl = null } = req.body;
+      const { title, answer, explain } = req.body;
       const { userId } = res.locals.user;
       const { quizId } = req.params;
-
-      console.log('퀴즈 수정 진입', title, answer, explain, userId, quizId);
-
-      await this.quizService.updateQuiz(userId, quizId, title, answer, explain);
+      const file = req.file
+      
+      if(!file){
+        await this.quizService.updateQuiz(userId, quizId, title, answer, explain); // QuizService의 createQuiz 함수 실행
+        return res.status(200).json({
+        success: true,
+        message: '게시글을 수정하였습니다.',
+      });
+      }
+      
+      const filename = req.file.filename
+      const resourceUrl = `http://52.78.166.176:3000/uploads/${filename}`
+      await this.quizService.updateQuiz(userId, quizId, title, answer, explain, resourceUrl);
       return res.status(200).json({
         success: true,
         message: '게시글을 수정하였습니다.',
