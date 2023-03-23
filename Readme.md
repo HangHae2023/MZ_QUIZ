@@ -46,7 +46,7 @@ npx sequelize model:generate --name QuizAnswerHistory --attributes historyId:int
 
 다음 명령을 입력하면 테이블을 생성할 수 있습니다.
 ```shell
-npx sequelize dp:create
+npx sequelize db:create
 ```
 
 이후 `makeTable.js`를 실행해주세요.

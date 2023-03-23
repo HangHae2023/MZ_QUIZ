@@ -1,5 +1,6 @@
 'use strict';
 const { Model } = require('sequelize');
+const moment = require('moment');
 module.exports = (sequelize, DataTypes) => {
   class QuizPost extends Model {
     /**
@@ -41,7 +42,7 @@ module.exports = (sequelize, DataTypes) => {
       },
       userId: {
         allowNull: false, // NOT NULL
-        unique: true,
+        // unique: true,
         type: DataTypes.STRING,
       },
       title: {
@@ -76,6 +77,11 @@ module.exports = (sequelize, DataTypes) => {
     {
       sequelize,
       modelName: 'QuizPost',
+      // uniqueKeys: {
+      //   quizLikeKey: {
+      //     fields: ['quizId', 'userId'],
+      //   },
+      // },
     }
   );
   return QuizPost;
